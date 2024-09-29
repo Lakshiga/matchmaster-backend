@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import { check, validationResult } from 'express-validator';
 import dotenv from 'dotenv';
 import User from '../models/User.js';
+import Organization from '../models/Organization.js';
+import Player from '../models/Player.js';
 import jwt from 'jsonwebtoken';
 import { verifyToken } from '../middleware/AuthMiddleware.js';  // Correct import
 import { isAdmin } from '../middleware/AdminMiddleware.js'; 
@@ -46,7 +48,7 @@ router.post(
         
       if (user.role === 'Organizer') {
         // Create a new organization for the organizer
-        const Organization = new Organization({
+        const organization = new Organization({
           userId: user._id,  // Linking the organizer user with the organization
           organizationId: req.body.organizationId,  // Assuming the organizationId is provided
           organizationEmail: req.body.organizationEmail,  // Assuming the organization email is provided
@@ -55,18 +57,18 @@ router.post(
         });
       
         // Save the organization details to the database
-        await Organization.save();
+        await organization.save();
       }
       
       // If the user is a Player, map them to a Player model
       if (user.role === 'Player') {
-        const Player = new Player({
+        const player = new Player({
           userId: user._id,
           playerName: req.body.playerName, // Assuming playerName is sent in the body
           contactNumber: req.body.contactNumber,
         });
 
-        await Player.save();
+        await player.save();
       }
 
       res.status(200).json({

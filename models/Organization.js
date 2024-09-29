@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 
-const { Schema } = mongoose;
-
-const OrganizationSchema = new Schema({
+const OrganizationSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -27,4 +25,5 @@ const OrganizationSchema = new Schema({
 });
 
 const Organization = mongoose.model('Organization', OrganizationSchema);
+
 export default Organization; // Use default export
