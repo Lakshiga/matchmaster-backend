@@ -49,9 +49,9 @@ router.post(
       if (user.role === 'Organizer') {
         // Create a new organization for the organizer
         const organization = new Organization({
-          userId: user._id,  // Linking the organizer user with the organization
-          organizationId: req.body.organizationId,  // Assuming the organizationId is provided
-          organizationEmail: req.body.organizationEmail,  // Assuming the organization email is provided
+          userID: user._id,  // Linking the organizer user with the organization
+          organizationID: req.body.organizationId,  // Assuming the organizationId is provided
+          email: user.email,  // Assuming the organization email is provided
           name: req.body.organizationName,  // Organization name
           contactNumber: req.body.contactNumber  // Organization contact number
         });
@@ -63,8 +63,9 @@ router.post(
       // If the user is a Player, map them to a Player model
       if (user.role === 'Player') {
         const player = new Player({
-          userId: user._id,
-          playerName: req.body.playerName, // Assuming playerName is sent in the body
+          userID: user._id,
+          email: user.email,  // Assuming the organization email is provided
+          name: req.body.name, // Assuming playerName is sent in the body
           contactNumber: req.body.contactNumber,
         });
 
