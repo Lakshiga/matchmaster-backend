@@ -201,4 +201,3 @@ router.put('/AllUser/:id/verify', verifyToken, isAdmin, async (req, res) => {
 export default router;
 
 
-
