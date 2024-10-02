@@ -42,4 +42,28 @@ const isAdmin = (req, res, next) => {
   next(); // Proceed if the user is an admin
 };
 
-export { verifyToken, isAdmin }; // Export both functions
+
+
+const auth = (req, res, next) => {
+  // Get token from the request header
+  const token = req.header('Authorization').split(' ')[1]; // Extract token from 'Bearer <token>'
+
+  // Check if no token
+  if (!token) {
+    return res.status(401).json({ msg: "No token, authorization denied" });
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);  // Ensure JWT_SECRET is properly configured
+    req.user = decoded.user;  // Extract user details from the token (contains id and role)
+    next();  // Move to the next middleware/route
+  } catch (err) {
+    res.status(401).json({ msg: "Token is not valid" });
+  }
+};
+
+
+
+
+export { verifyToken, isAdmin, auth }; // Export both functions

@@ -6,16 +6,30 @@ import Event from "../models/Event.js";
 const router = express.Router();
 
 // Create event (Organizer only)
-router.post("/event", auth, checkRole("Organizer"), async (req, res) => {
-  const { name, organizerId, matchType } = req.body;
-
-  // Validate required fields
-  // if (!name || !date || !location || !description) {
-  //   return res.status(400).json({ msg: "Please fill out all fields." });
-  // }
+// Event creation route (Organizer only)
+router.post("/create-event", auth, checkRole("Organizer"), async (req, res) => {
+  const { name, matchType } = req.body;  // Remove organizerId from req.body
 
   try {
-    const event = new Event({ name, organizerId, matchType });
+    // Get the organizer's ID from the authenticated user's token (populated by auth middleware)
+    const organizerId = req.user.id;  // Automatically get the organizerId from the token
+
+    // Validate matchType to ensure it's either 'League' or 'Knockout'
+    const validMatchTypes = ['League', 'Knockout'];
+    if (!validMatchTypes.includes(matchType)) {
+      return res.status(400).json({ msg: "Invalid match type. Must be either 'League' or 'Knockout'." });
+    }
+
+    // Create a new event with the automatically assigned organizerId
+    const event = new Event({
+      name,
+      organizerID: organizerId,  // Automatically assign organizerId
+      matchType,
+      players: [],   // Initialize players array
+      umpires: []    // Initialize umpires array
+    });
+
+    // Save the event to the database
     await event.save();
     res.status(201).json({ msg: "Event created successfully", event });
   } catch (err) {
