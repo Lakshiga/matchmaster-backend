@@ -4,10 +4,12 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import connectDB from './config/db.js'; // Importing the db connection
-import userRoutes from './routes/auth.js'; // Importing user authentication routes
+import authRoutes from './routes/auth.js'; // Importing user authentication routes
 import eventRoutes from './routes/event.js'; // Importing event routes
 import adminRoutes from './routes/admin.js'; // Importing admin routes
 import organizerRoutes from './routes/organizer.js'; // Importing organizer routes
+import userRoutes from './routes/user.js'; // Importing organizer routes
+import matchRoutes from './routes/match.js'; // Importing match-related routes
 
 const app = express();
 
@@ -20,10 +22,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 connectDB();
 
 // API Routes
-app.use('/api/auth', userRoutes); // API route for user-related operations
+app.use('/api/auth', authRoutes); // API route for user-related operations
 app.use('/api/event', eventRoutes); // API route for event-related operations
 app.use('/api/admin', adminRoutes); // API route for admin-related operations
 app.use('/api/organizer', organizerRoutes); // API route for organizer-related operations
+app.use('/api/user', userRoutes);
+app.use('/api/match', matchRoutes); // API route for match-related operations
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
